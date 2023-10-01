@@ -1,0 +1,26 @@
+{
+    "name": "jmsweb/warehouse-api",
+    "description": "Warehouse API Gateway for Microservices",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jason"
+        }
+    ],
+    "scripts": {
+        "deploy:dev": "script/deploy.cmd development C:\\dev\\www\\staging\\warehouse-api",
+        "deploy:prod": "script/deploy.cmd production C:\\dev\\www\\production\\warehouse-api"
+    },
+    "require": {
+        "slim/slim": "^4.12",
+        "slim/psr7": "^1.6",
+        "php-di/php-di": "^7.0",
+        "guzzlehttp/guzzle": "^7.8",
+        "symfony/dotenv": "^6.3"
+    }
+}
