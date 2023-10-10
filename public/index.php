@@ -57,9 +57,14 @@ $app->get('/health-check', App\Controller\HealthCheck::class);
 
 // TOKEN AUTHENTICATION
 $app->group('/api/v1/auth', function(RouteCollectorProxy $group) {
-    $group->map(['GET'], '/verify', App\Controller\Token\VerifyController::class);
     $group->map(['POST'], '[/]', App\Controller\Token\GenerateController::class);
-//    $group->post('/reset', App\Service\Auth\ResetToken::class);
+    $group->map(['GET'], '/verify', App\Controller\Token\VerifyController::class);
+    $group->map(['POST'], '/reset', App\Controller\Token\ResetController::class);
+    $group->map(['POST'], '/customer', App\Controller\Customer\AddCustomerController::class);
+});
+
+$app->group('/api/v1/product', function(RouteCollectorProxy $group) {
+    $group->map(['POST'], '/add', App\Controller\Product\AddProductController::class);
 });
 
 /**
