@@ -32,7 +32,11 @@ class VerifyController {
             $data = json_decode($post->getBody());
 
             if ($data->success) {
-                $response->getBody()->write(json_encode(['success' => true]));
+                $response->getBody()->write(json_encode([
+                    'success' => $data->success,
+                    'jwt' => $data->jwt,
+                    'payload' => $data->payload
+                ]));
                 return $response->withStatus(201);
             }
         }
