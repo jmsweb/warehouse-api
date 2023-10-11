@@ -23,10 +23,18 @@ class AddProductController {
     function __invoke(Request $request, Response $response, array $args): Response {
         $data = $request->getParsedBody();
         $service = $this->container->get('warehouse-product');
+
         $post = $service->post('/add', [
             'json' => json_encode($data)
         ]);
-        $response->getBody()->write(json_encode(['warehouse_api' => 'OK']));
+
+        $data = json_decode($post->getBody());
+
+        $response->getBody()->write(json_encode([
+            'success' => $data->success,
+            'message' => $data->message
+        ]));
+
         $response = $response->withHeader('Access-Control-Allow-Origin', $_ENV['WAREHOUSE_REACT']);
         $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         return $response->withStatus(201);
