@@ -31,7 +31,7 @@ class ExtendController {
         $data = json_decode($post->getBody());
 
         if ($data->success) {
-            $post = $service->post('/extend?XDEBUG_SESSION=ECLIPSE_DBGP', [
+            $post = $service->post('/extend', [
                 'json' => $cookieParams[$_ENV['COOKIE_NAME']]
             ]);
             $expiry = time() + 600; // 10 minutes
@@ -54,7 +54,9 @@ class ExtendController {
             ]);
 
             $response->getBody()->write(json_encode([
-                'success' => $data->success
+                'success' => $data->success,
+                'jwt' => $data->jwt,
+                'payload' => $data->payload
             ]));
             return $response->withStatus(201);
         }
