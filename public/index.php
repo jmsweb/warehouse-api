@@ -58,7 +58,8 @@ $app->get('/health-check', App\Controller\HealthCheck::class);
 $app->group('/api/v1/auth', function(RouteCollectorProxy $group) {
     $group->map(['POST'], '[/]', App\Controller\Token\GenerateController::class);
     $group->map(['GET'], '/verify', App\Controller\Token\VerifyController::class);
-    $group->map(['POST'], '/reset', App\Controller\Token\ResetController::class);
+    $group->map(['POST'], '/extend', App\Controller\Token\ExtendController::class)->add(new CheckForCookie());
+    $group->map(['POST'], '/reset', App\Controller\Token\ResetController::class)->add(new CheckForCookie());
     $group->map(['POST'], '/customer', App\Controller\Customer\AddCustomerController::class)->add(new CheckForCookie());
 });
 
