@@ -39,12 +39,22 @@ class GenerateController {
             if ($data->success) {
                 // Apply `double-submit-cookie` Strategy to Mitigate against XSS and CSRF
                 // HttpOnly SameSite Secure only protects against XSS.
+                $expiry = time() + 600; // 10 minutes 600
                 setcookie($_ENV['COOKIE_NAME'], $data->jwt, [
-                    'expires' => time() + 600,
+                    'expires' => $expiry,
                     'path' => '/',
                     'domain' => $_ENV['COOKIE_DOMAIN'], // PAY ATTENTION
                     'secure' => filter_var($_ENV['COOKIE_SECURE'], FILTER_VALIDATE_BOOLEAN), // MUST BE TRUE IN PROD
-                    'httponly' => true,
+                    'httponly' => true, // Cookie is inaccessible for JavaScript
+                    'samesite' => 'Strict'
+                ]);
+
+                setcookie($_ENV['COOKIE_EXPIRY'], $expiry, [
+                    'expires' => $expiry,
+                    'path' => '/',
+                    'domain' => $_ENV['COOKIE_DOMAIN'], // PAY ATTENTION
+                    'secure' => filter_var($_ENV['COOKIE_SECURE'], FILTER_VALIDATE_BOOLEAN), // MUST BE TRUE IN PROD
+                    'httponly' => false, // Cookie is accessible for JavaScript
                     'samesite' => 'Strict'
                 ]);
 

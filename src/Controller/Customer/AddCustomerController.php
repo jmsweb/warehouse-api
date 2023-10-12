@@ -35,7 +35,12 @@ class AddCustomerController {
             ]
         ]);
         $data = json_decode($post->getBody());
-        $response->getBody()->write(json_encode($data));
+
+        $response->getBody()->write(json_encode([
+            'success' => $data->success,
+            'message' => $data->message
+        ]));
+
         $response = $response->withHeader('Access-Control-Allow-Origin', $_ENV['WAREHOUSE_REACT']);
         $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         return $response->withStatus(201);

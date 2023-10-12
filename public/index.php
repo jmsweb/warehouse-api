@@ -8,13 +8,13 @@ use Symfony\Component\Dotenv\Dotenv;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use GuzzleHttp\Client;
+use App\Middleware\CheckForCookie;
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env');
 
-// TODO Encapsulate every request with try/catch block
 $container = new Container([
     'warehouse-auth' => new Client([
         'base_uri' => $_ENV['WAREHOUSE_AUTH'],
@@ -52,24 +52,24 @@ $app->add(function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
 
-// HEALTH CHECK
 $app->get('/health-check', App\Controller\HealthCheck::class);
 
 // TOKEN AUTHENTICATION
 $app->group('/api/v1/auth', function(RouteCollectorProxy $group) {
     $group->map(['POST'], '[/]', App\Controller\Token\GenerateController::class);
     $group->map(['GET'], '/verify', App\Controller\Token\VerifyController::class);
-    $group->map(['POST'], '/reset', App\Controller\Token\ResetController::class);
-    $group->map(['POST'], '/customer', App\Controller\Customer\AddCustomerController::class);
+    $group->map(['POST'], '/extend', App\Controller\Token\ExtendController::class)->add(new CheckForCookie());
+    $group->map(['POST'], '/reset', App\Controller\Token\ResetController::class)->add(new CheckForCookie());
+    $group->map(['POST'], '/customer', App\Controller\Customer\AddCustomerController::class)->add(new CheckForCookie());
 });
 
 $app->group('/api/v1/product', function(RouteCollectorProxy $group) {
-    $group->map(['POST'], '/add', App\Controller\Product\AddProductController::class);
+    $group->map(['POST'], '/add', App\Controller\Product\AddProductController::class)->add(new CheckForCookie());
 });
 
 /**
  * Catch-all route to serve a 404 Not Found page if none of the routes match
- * NOTE: make sure this route is defined last
+ * NOTE: This must be defined last.
  */
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
     throw new HttpNotFoundException($request);

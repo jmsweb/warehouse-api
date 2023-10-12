@@ -31,6 +31,15 @@ class ResetController {
                 'httponly' => true,
                 'samesite' => 'Strict'
             ]);
+
+            setcookie($_ENV['COOKIE_EXPIRY'], '', [
+                'expires' => -1,
+                'path' => '/',
+                'domain' => $_ENV['COOKIE_DOMAIN'], // PAY ATTENTION
+                'secure' => filter_var($_ENV['COOKIE_SECURE'], FILTER_VALIDATE_BOOLEAN), // MUST BE TRUE IN PROD
+                'httponly' => false,
+                'samesite' => 'Strict'
+            ]);
             $response->getBody()->write(json_encode(['success' => true]));
             return $response->withStatus(201);
         }
