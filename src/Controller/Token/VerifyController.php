@@ -34,7 +34,6 @@ class VerifyController {
             if ($data->success) {
                 $response->getBody()->write(json_encode([
                     'success' => $data->success,
-                    'jwt' => $data->jwt,
                     'payload' => $data->payload
                 ]));
                 return $response->withStatus(201);

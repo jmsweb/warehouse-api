@@ -58,8 +58,11 @@ class GenerateController {
                     'samesite' => 'Strict'
                 ]);
 
-                // localStorage JWT from Auth Microservice
-                $response->getBody()->write(json_encode($data));
+                // JWT from Auth Microservice, do not share to client.
+                $response->getBody()->write(json_encode([
+                    'success' => $data->success,
+                    'payload' => $data->payload
+                ]));
                 return $response->withStatus(201);
             }
         }
