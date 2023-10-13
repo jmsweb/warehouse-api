@@ -35,8 +35,6 @@ class AddProductController {
             'message' => $data->message
         ]));
 
-        $response = $response->withHeader('Access-Control-Allow-Origin', $_ENV['WAREHOUSE_REACT']);
-        $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         return $response->withStatus(201);
     }
 }
